@@ -114,9 +114,9 @@ let framerate = 2000;
 let player = {
       name: "Player",
       level: 1,
-      maxHealth: 5,
-      currentHealth: 5,
-      attack: 2,
+      maxHealth: (5+Upgrades.baseStat*3) * (1+(Upgrades.statMul)/100),
+      currentHealth: (5+Upgrades.baseStat*3) * (1+(Upgrades.statMul)/100),
+      attack: player.attack = (2+Upgrades.baseStat) * (1+(Upgrades.statMul)/100),
 	  coin: 0,
     };
 let fakeStat = {
@@ -230,10 +230,10 @@ function playerDeath() {
   clearInterval(loopId);
   player.coin += getCoin(player.level)
   player.level = 0;
-  player.maxHealth = (5+Upgrades.baseStat*3) * 1+(Upgrades.statMul)/100;
-  player.attack = (2+Upgrades.baseStat) * 1+(Upgrades.statMul)/100;
   fakeStat.maxHealth = 5+Upgrades.baseStat*3;
   fakeStat.attack = 2+Upgrades.baseStat;
+  player.maxHealth = (5+Upgrades.baseStat*3) * (1+(Upgrades.statMul)/100);
+  player.attack = (2+Upgrades.baseStat) * (1+(Upgrades.statMul)/100);
   player.currentHealth = player.maxHealth;
   document.getElementById("restartButton").style.display = "inline";
 }
