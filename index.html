@@ -188,7 +188,7 @@ function addToCombatLog(message) {
     }
 
     function displayStats() {
-	document.getElementById("output").innerHTML = `<br> Action happens every ${framerate/1000} seconds.`
+	document.getElementById("output").innerHTML = `<br> Action happens every ${framerate * (0.977**Upgrades.frameRate)/1000} seconds.`
       document.getElementById("output").innerHTML += `<br>${player.name} (Level ${player.level})<br>`;
       document.getElementById("output").innerHTML += `Health: ${Math.floor(player.currentHealth)}/${Math.floor(player.maxHealth)}<br>`;
       document.getElementById("output").innerHTML += `Attack: ${Math.floor(player.attack)}<br>`;
