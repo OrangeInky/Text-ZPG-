@@ -322,7 +322,7 @@ function getframeRate(n) {
 	  const c5 = calculateUpgradeCost(5);
 
       // Update button text with cost and level
-      b1.innerHTML = `Upgrade ${1} <br> Level: ${Upgrades.coinMult}<br> Cost: ${c1} coins <br> Description: multiplies coinGain by ${Upgrades.coinMult+1}`;
+      b1.innerHTML = `Upgrade ${1} <br> Level: ${Upgrades.coinMult}<br> Cost: ${c1} coins <br> Description: multiplies coinGain by ${(Upgrades.coinMult)/10+1}`;
 	  b2.innerHTML = `Upgrade ${2} <br> Level: ${Upgrades.baseStat}<br> Cost: ${c2} coins <br> Description: add ${Upgrades.baseStat*3} base HP and ${Upgrades.baseStat} base attack <br> Hint: Triggers after player death, not immedieatly after purchase.`;
 	  b3.innerHTML = `Upgrade ${3} <br> Level: ${Upgrades.statSteal}<br> Cost: ${c3} coins <br> Description: steals ${Upgrades.statSteal}% of defeated enemy's stat`;
 	  b4.innerHTML = `Upgrade ${4} <br> Level: ${Upgrades.statMul}<br> Cost: ${c4} coins <br> Description: Multiplies hp and attack by ${1+(Upgrades.statMul)/100}%`;
