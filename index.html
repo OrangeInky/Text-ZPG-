@@ -243,7 +243,7 @@ function getCoin(level) {
   const randomFactor = 1 + Math.random();
 
   // Calculate Coin based on the formula
-  const gain = Math.floor(1 + level ** 2 * randomFactor)*(1+Upgrades.coinMult)/10;
+  const gain = Math.floor(1 + level ** 2 * randomFactor)*(1+(Upgrades.coinMult)/10);
 
   return gain;
 }
