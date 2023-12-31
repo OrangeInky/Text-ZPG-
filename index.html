@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text RPG</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background-color: #f5f5f5;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1 {
+      font-family: 'Cursive', sans-serif;
+      color: #333;
+    }
+
+    #container {
+      display: flex;
+      justify-content: space-between;
+      width: 80%;
+      margin-top: 20px;
+    }
+
+    #output, #combat-log {
+      flex: 1;
+      text-align: left;
+      overflow-y: scroll;
+      height: 300px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #fff;
+      margin-right: 10px;
+      font-family: 'Georgia', serif;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    #combat-log {
+      width: 200px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+	.grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+    }
+
+    .upgradeButton {
+      padding: 15px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+	 .upgradeButton:hover {
+      background-color: #2980b9;
+    }
+
+  </style>
+</head>
+<body onload = "loadGame()">
+
+  <h1>Text RPG</h1>
+
+  <div id="container">
+    <div id="output"></div>
+    <div id="combat-log"></div>
+  </div>
+  
+  <button id="restartButton" onclick="startGame()">Start Game</button>
+    <div class="grid">
+    <button class="button" id = "UP1" onclick="upgrade(1)">Upgrade 1 <br> Effect: Multiply coin gains <br> Cost: </button>
+    <button class="button" id = "UP2" onclick="upgrade(2)">Upgrade 2</button>
+    <button class="button" id = "UP3" onclick="upgrade(3)">Upgrade 3</button>
+    <button class="button" id = "UP4" onclick="upgrade(4)">Upgrade 4</button>
+	<button class="button" id = "UP5" onclick="upgrade(5)">Upgrade 5</button>
+  </div>
+
+</body>
+</html>
+
+</body>
+</html>
+
+  <script>
+let framerate = 2000;
+let player = {
+      name: "Player",
+      level: 1,
+      maxHealth: 5,
+      currentHealth: 5,
+      attack: 2,
+	  coin: 0,
+    };
+let fakeStat = {
+      maxHealth: 5,
+      attack: 2,
+    };
+let enemy = {};
+let loopId;
+let isLooping = false;
+let Upgrades = {coinMult: 0, baseStat: 0, statSteal: 0, statMul: 0, frameRate: 0}
+
+function loop() {
+  if (isLooping) {
+    loopId = setInterval(function iteration() {
+      attack();
+    }, framerate * (0.977**Upgrades.frameRate)); // Set the interval to the specified framerate
+  } else {
+    // Stop the loop
+    clearInterval(loopId);
+    console.log("Loop stopped");
+  }
+}
+
+function startGame() {
+  document.getElementById("output").innerHTML = "Welcome to the Text RPG!<br>";
+  document.getElementById("combat-log").innerHTML = "";
+  document.getElementById("restartButton").style.display = "none";
+  generateNewEnemy();
+  displayStats();
+  isLooping = true;
+  loop();
+}
+
+
+function addToCombatLog(message) {
+  const combatLog = document.getElementById("combat-log");
+  const maxMessages = 100;
+
+  // Create a new div for the message
+  const messageDiv = document.createElement("div");
+  messageDiv.innerHTML = message;
+
+  // Add the new message div
+  combatLog.appendChild(messageDiv);
+
+  // Remove the top-most message if the cap is reached
+  const messages = combatLog.children;
+  if (messages.length > maxMessages) {
+    combatLog.removeChild(messages[0]);
+  }
+
+  // Scroll to the bottom
+  combatLog.scrollTop = combatLog.scrollHeight;
+}
+
+
+
+    function generateNewEnemy() {
+	let hpMod = Math.floor(player.level * 2 ** ((Math.random() * 1)+1))*((1.06**player.level))
+	let atkMod = Math.floor(player.level ** ((Math.random() * 1)+1))*(1.05**player.level)
+	let hp = Math.floor((hpMod)*((Math.random() * 2)+1))
+      enemy = {
+        name: "Enemy",
+        maxHealth: 3+hp,
+        currentHealth: 3+hp,
+        attack: Math.floor((1 + atkMod)*((Math.random() * 2)+1)),
+      };
+      addToCombatLog(`${enemy.name} appears!`);
+    }
+
+    function displayStats() {
+	document.getElementById("output").innerHTML = `<br> Action happens every ${framerate/1000} seconds.`
+      document.getElementById("output").innerHTML += `<br>${player.name} (Level ${player.level})<br>`;
+      document.getElementById("output").innerHTML += `Health: ${Math.floor(player.currentHealth)}/${Math.floor(player.maxHealth)}<br>`;
+      document.getElementById("output").innerHTML += `Attack: ${Math.floor(player.attack)}<br>`;
+	  document.getElementById("output").innerHTML += `Coins: ${Math.floor(player.coin)}<br><br>`;
+
+      document.getElementById("output").innerHTML += `${enemy.name}<br>`;
+      document.getElementById("output").innerHTML += `Health: ${Math.floor(enemy.currentHealth)}/${Math.floor(enemy.maxHealth)}<br>`;
+      document.getElementById("output").innerHTML += `Attack: ${Math.floor(enemy.attack)}<br><br>`;
+    }
+
+    function attack() {
+	let playerDamage = Math.floor(Math.random() * player.attack)/2 + 1;
+      enemy.currentHealth -= playerDamage;
+      addToCombatLog(`${player.name} dealt ${playerDamage} damage to ${enemy.name}!`);
+
+      if (enemy.currentHealth <= 0) {
+	    addToCombatLog(`${enemy.name} is defeated!`)
+		addToCombatLog(`${player.name} leveled up!`);
+	    generateNewEnemy();;
+        player.level++;
+        fakeStat.maxHealth += 3 + (enemy.maxHealth*Upgrades.statSteal/500);
+		fakeStat.attack += 1 + (enemy.attack*Upgrades.statSteal/500);
+		player.maxHealth = fakeStat.maxHealth * 1+(Upgrades.statMul)/100;
+		player.attack = fakeStat.attack * 1+(Upgrades.statMul)/100;
+        player.currentHealth = player.maxHealth;
+      } else {
+        let enemyDamage = Math.floor(Math.random() * enemy.attack) + 1;
+        player.currentHealth -= enemyDamage;
+        addToCombatLog(`${enemy.name} dealt ${enemyDamage} damage to ${player.name}!`);
+
+        if (player.currentHealth <= 0) {playerDeath();}
+      }
+          displayStats();}
+		  
+function playerDeath() {
+  addToCombatLog(`${player.name} is defeated. Game over! But ${player.name} earned ${getCoin(player.level)} gold coins!`);
+  addToCombatLog("Press Restart to try again.");
+  isLooping = false;
+  clearInterval(loopId);
+  player.coin += getCoin(player.level)
+  player.level = 0;
+  player.maxHealth = (5+Upgrades.baseStat*3) * 1+(Upgrades.statMul)/100;
+  player.attack = (2+Upgrades.baseStat) * 1+(Upgrades.statMul)/100;
+  fakeStat.maxHealth = 5+Upgrades.baseStat*3;
+  fakeStat.attack = 2+Upgrades.baseStat;
+  player.currentHealth = player.maxHealth;
+  document.getElementById("restartButton").style.display = "inline";
+}
+
+function getCoin(level) {
+  // Generate a random factor between 1 and 2
+  const randomFactor = 1 + Math.random();
+
+  // Calculate Coin based on the formula
+  const gain = Math.floor(1 + level ** 2 * randomFactor)*(1+Upgrades.coinMult)/10;
+
+  return gain;
+}
+
+function upgrade(handle) {
+  const cost = calculateUpgradeCost(handle);
+  
+  // Check if the player has enough coins to purchase the upgrade
+  if (player.coin >= cost) {
+    // Subtract the cost from player's coins
+    player.coin -= cost;
+
+    // Update the Upgrades object with new levels
+    switch (handle) {
+      case 1:
+        Upgrades.coinMult++;
+        break;
+      case 2:
+        Upgrades.baseStat++;
+        break;
+      case 3:
+        Upgrades.statSteal++;
+        break;
+      case 4:
+        Upgrades.statMul++;
+        break;
+	  case 5:
+	    Upgrades.frameRate++;
+      default:
+        console.error('Invalid upgrade handle');
+        break;
+    }
+
+    // Log the upgrade purchase
+    console.log(`Upgrade '${handle}' purchased! New level: ${Upgrades[handle]}, Cost: ${cost}`);
+  } else {
+    console.log(`Not enough coins to purchase '${handle}' upgrade. Current coins: ${player.coin}, Cost: ${cost}`);
+  }
+	displayUpgrade();
+	displayStats();
+}
+
+function calculateUpgradeCost(handle) {switch(handle) {case 1: return getcoinMult(2); case 2: return getbaseStat(2); case 3: return getstatsSteal(2); case 4: return getstatMul(2); case 5: return getframeRate(2); }}
+
+function getcoinMult(n) {	
+		if (n===1) { return Upgrades.coinMult}
+		if (n===2) { return Math.floor((Upgrades.coinMult+10) * (1.0426 ** Upgrades.coinMult))}
+		}
+function getbaseStat(n) {	
+		if (n===1) { return Upgrades.baseStat}
+		if (n===2) { return Math.floor((Upgrades.baseStat+10) * (1 ** Upgrades.baseStat))}
+		}
+function getstatsSteal(n) {	
+		if (n===1) { return Upgrades.statSteal}
+		if (n===2) { return Math.floor((Upgrades.statSteal+20) * (1.122 ** Upgrades.statSteal))}
+		}
+function getstatMul(n) {	
+		if (n===1) { return Upgrades.statMul}
+		if (n===2) { return Math.floor((Upgrades.statMul+50) * (1.047 ** Upgrades.statMul))}
+		}
+function getframeRate(n) {	
+		if (n===1) { return Upgrades.frameRate}
+		if (n===2) { return Math.floor((Upgrades.frameRate+50) * (1.0089 ** Upgrades.frameRate))}
+		}
+
+    function displayUpgrade() {
+      const b1 = document.getElementById("UP1");
+	  const b2 = document.getElementById("UP2");
+	  const b3 = document.getElementById("UP3");
+	  const b4 = document.getElementById("UP4");
+	  const b5 = document.getElementById("UP5");
+      const c1 = calculateUpgradeCost(1);
+	  const c2 = calculateUpgradeCost(2);
+	  const c3 = calculateUpgradeCost(3);
+	  const c4 = calculateUpgradeCost(4);
+	  const c5 = calculateUpgradeCost(5);
+
+      // Update button text with cost and level
+      b1.innerHTML = `Upgrade ${1} <br> Level: ${Upgrades.coinMult}<br> Cost: ${c1} coins <br> Description: multiplies coinGain by ${Upgrades.coinMult+1}`;
+	  b2.innerHTML = `Upgrade ${2} <br> Level: ${Upgrades.baseStat}<br> Cost: ${c2} coins <br> Description: add ${Upgrades.baseStat*3} base HP and ${Upgrades.baseStat} base attack <br> Hint: Triggers after player death, not immedieatly after purchase.`;
+	  b3.innerHTML = `Upgrade ${3} <br> Level: ${Upgrades.statSteal}<br> Cost: ${c3} coins <br> Description: steals ${Upgrades.statSteal}% of defeated enemy's stat`;
+	  b4.innerHTML = `Upgrade ${4} <br> Level: ${Upgrades.statMul}<br> Cost: ${c4} coins <br> Description: Multiplies hp and attack by ${1+(Upgrades.statMul)/100}%`;
+	  b5.innerHTML = `Upgrade ${5} <br> Level: ${Upgrades.frameRate}<br> Cost: ${c5} coins <br> Description: Make things happen faster.`;
+    }
+	
+	displayUpgrade();
+	
+	function saveGame () {
+	let gameData = {player: player, fakeStat: fakeStat, Upgrades : Upgrades};
+	gameData = JSON.stringify(gameData);
+	localStorage.setItem("savedGame",gameData)
+	console.log("saved")
+}
+
+	function loadGame () {
+	let gameData = localStorage.getItem("savedGame")
+	gameData = JSON.parse(gameData);
+	player.coin = gameData.player.coin;
+	fakeStat = gameData.fakeStat;
+	Upgrades = gameData.Upgrades;
+	displayUpgrade();
+}
+
+	function saveLoop() {setInterval(function () {saveGame()},10000)}
+	saveLoop();
+  </script>
+
+</body>
+</html>
