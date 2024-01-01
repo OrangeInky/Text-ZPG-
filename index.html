@@ -334,7 +334,7 @@ function getcoinMult(n) {
 		}
 function getbaseStat(n) {	
 		if (n===1) { return Upgrades.baseStat}
-		if (n===2) { return Math.floor((Upgrades.baseStat+5) * (Math.max(1,(Upgrades.baseStat-200)/200) ** Upgrades.baseStat))}
+		if (n===2) { return Math.floor((Upgrades.baseStat+5) * (Math.max(1,(Upgrades.baseStat-1000)/1000) ** Upgrades.baseStat))}
 		}
 function getstatsSteal(n) {	
 		if (n===1) { return Upgrades.statSteal}
