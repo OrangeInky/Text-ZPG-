@@ -284,12 +284,12 @@ function getCoin(level) {
   // Generate a random factor between 1 and 2
   const randomFactor = 1 + Math.random()*randRange;
 
-  return Math.floor(1 + level ** 2 * randomFactor)*(1+(Upgrades.coinMult)/5);
+  return Math.floor(1 + (level ** 1.5) * randomFactor)*(1+(Upgrades.coinMult)/5);
 }
 
 function getExpGain() {const randomFactor = 1 + Math.random()*randRange; return Math.floor(((enemy.maxHealth+enemy.attack)/2)*randomFactor)*(1+(Upgrades.expMult)/5)}
 
-function getExpReq(level) {return expReq*(level**2)}
+function getExpReq(level) {return expReq*(level**1.5)}
 
 function upgrade(handle) {
   const cost = calculateUpgradeCost(handle);
