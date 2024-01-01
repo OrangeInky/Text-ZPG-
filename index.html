@@ -284,10 +284,10 @@ function getCoin(level) {
   // Generate a random factor between 1 and 2
   const randomFactor = 1 + Math.random()*randRange;
 
-  return Math.floor(1 + level ** 2 * randomFactor)*(1+(Upgrades.coinMult)/10);
+  return Math.floor(1 + level ** 2 * randomFactor)*(1+(Upgrades.coinMult)/5);
 }
 
-function getExpGain() {const randomFactor = 1 + Math.random()*randRange; return Math.floor(((enemy.maxHealth+enemy.attack)/2)*randomFactor)*(1+(Upgrades.expMult)/10)}
+function getExpGain() {const randomFactor = 1 + Math.random()*randRange; return Math.floor(((enemy.maxHealth+enemy.attack)/2)*randomFactor)*(1+(Upgrades.expMult)/5)}
 
 function getExpReq(level) {return expReq*(level**2)}
 
@@ -368,12 +368,12 @@ function getExpMult(n) {
 	  const c6 = calculateUpgradeCost(6)
 
       // Update button text with cost and level
-      b1.innerHTML = `Upgrade ${1} <br> Level: ${Upgrades.coinMult}<br> Cost: ${c1} coins <br> Description: Multiplies coinGain by ${(Upgrades.coinMult)/10+1}`;
+      b1.innerHTML = `Upgrade ${1} <br> Level: ${Upgrades.coinMult}<br> Cost: ${c1} coins <br> Description: Multiplies coinGain by ${(Upgrades.coinMult)/5+1}`;
 	  b2.innerHTML = `Upgrade ${2} <br> Level: ${Upgrades.baseStat}<br> Cost: ${c2} coins <br> Description: add ${Upgrades.baseStat*1.5} base HP and ${Upgrades.baseStat*0.5} base attack <br> Hint: Triggers after player death, not immedieatly after purchase.`;
 	  b3.innerHTML = `Upgrade ${3} <br> Level: ${Upgrades.statSteal}<br> Cost: ${c3} coins <br> Description: steals ${Upgrades.statSteal/5}% of defeated enemy's stat`;
 	  b4.innerHTML = `Upgrade ${4} <br> Level: ${Upgrades.statMul}<br> Cost: ${c4} coins <br> Description: Multiplies hp and attack by ${1+(Upgrades.statMul)/100}x`;
 	  b5.innerHTML = `Upgrade ${5} <br> Level: ${Upgrades.frameRate}<br> Cost: ${c5} coins <br> Description: Make things happen faster.`;
-	  b6.innerHTML = `Upgrade ${6} <br> Level: ${Upgrades.expMult}<br> Cost: ${c6} coins <br> Description: Multiplies expGain by ${(Upgrades.expMult)/10+1}`;
+	  b6.innerHTML = `Upgrade ${6} <br> Level: ${Upgrades.expMult}<br> Cost: ${c6} coins <br> Description: Multiplies expGain by ${(Upgrades.expMult)/5+1}`;
     }
 	
 	function saveGame () {
