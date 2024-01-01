@@ -175,7 +175,7 @@ function format(x) {
     let power = Math.floor(Math.log10(x))
     let matissa = x / Math.pow(10, power)
     if (power < 3) {
-        return x;
+        return x.toFixed(3);
     } else {
         return matissa.toFixed(3) + "e" + power;
     }
@@ -185,7 +185,7 @@ function loop() {
   if (isLooping) {
     loopId = setInterval(function iteration() {
       attack();
-    }, framerate * (0.988693577776**Upgrades.frameRate*sliderValue)); // Set the interval to the specified framerate
+    }, framerate * (0.994649571761**Upgrades.frameRate*sliderValue)); // Set the interval to the specified framerate
   } else {
     // Stop the loop
     clearInterval(loopId);
@@ -248,7 +248,7 @@ function addToCombatLog(message) {
     function displayStats() {
 	let displayLevel = format(player.level);
 	sliderValue = 100/parseInt(slider.value)
-	document.getElementById("output").innerHTML = `Action happens every ${(sliderValue* framerate * (0.988693577776**Upgrades.frameRate)/1000).toFixed(3)} seconds.`
+	document.getElementById("output").innerHTML = `Action happens every ${(sliderValue* framerate * (0.994649571761**Upgrades.frameRate)/1000).toFixed(3)} seconds.`
       document.getElementById("output").innerHTML += "<br> " + player.name + " Level " + displayLevel + "<br>";
       document.getElementById("output").innerHTML += "Health: " + format(Math.floor(player.currentHealth))+ "/" + format(Math.floor(player.maxHealth)) + "<br>";
       document.getElementById("output").innerHTML += "Attack: " + format(Math.floor(player.attack)) + "<br>";
