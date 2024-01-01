@@ -250,7 +250,7 @@ function addToCombatLog(message) {
 	  document.getElementById("output").innerHTML += `Coins: ${Math.floor(format(player.coin))}<br>`;
 	  document.getElementById("output").innerHTML += `Exp: ${Math.floor(format(player.exp))}/${Math.floor(getExpReq(format(player.level)))}<br><br>`;
 
-      document.getElementById("output").innerHTML += `${enemy.name}<br>`;
+      document.getElementById("output").innerHTML += `${enemy.name} # ${defeatCount}<br>`;
       document.getElementById("output").innerHTML += `Health: ${Math.floor(enemy.currentHealth)}/${Math.floor(enemy.maxHealth)}<br>`;
       document.getElementById("output").innerHTML += `Attack: ${Math.floor(enemy.attack)}<br><br>`;
     }
