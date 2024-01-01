@@ -117,7 +117,7 @@ let player = {
       maxHealth: 5,
       currentHealth: 5,
       attack: 2,
-	  coin: 0,
+      coin: 0,
     };
 let fakeStat = {
       maxHealth: 5,
@@ -126,7 +126,8 @@ let fakeStat = {
 let enemy = {};
 let loopId;
 let isLooping = false;
-let Upgrades = {coinMult: 0, baseStat: 0, statSteal: 0, statMul: 0, frameRate: 0}
+let Upgrades = {coinMult: 0, baseStat: 0, statSteal: 0, statMul: 0, frameRate: 0};
+let expReq = 10;
 
 function loop() {
   if (isLooping) {
@@ -206,31 +207,29 @@ function addToCombatLog(message) {
     }
 
     function attack() {
-	let playerDamage = Math.floor(Math.random() * (1+Math.floor(player.attack/2))) + Math.floor(Math.random() * player.attack)/2;
+      let playerDamage = Math.floor(Math.random() * (1+Math.floor(player.attack/2))) + Math.floor(Math.random() * player.attack)/2;
       enemy.currentHealth -= playerDamage;
       addToCombatLog(`${player.name} dealt ${playerDamage} damage to ${enemy.name}!`);
-
       if (enemy.currentHealth <= 0) {
 	    addToCombatLog(`${enemy.name} is defeated!`)
 		addToCombatLog(`${player.name} leveled up!`);
 	    generateNewEnemy();;
         player.level++;
         fakeStat.maxHealth += 3 + (enemy.maxHealth*Upgrades.statSteal/500);
-		fakeStat.attack += 1 + (enemy.attack*Upgrades.statSteal/500);
-		player.maxHealth = fakeStat.maxHealth * 1+(Upgrades.statMul)/100;
-		player.attack = fakeStat.attack * 1+(Upgrades.statMul)/100;
+	fakeStat.attack += 1 + (enemy.attack*Upgrades.statSteal/500);
+	player.maxHealth = fakeStat.maxHealth * 1+(Upgrades.statMul)/100;
+	player.attack = fakeStat.attack * 1+(Upgrades.statMul)/100;
         player.currentHealth = player.maxHealth;
       } else {
         let enemyDamage = Math.floor(Math.random() * (1+Math.floor(enemy.attack/2))) + Math.floor(Math.random() * enemy.attack)/2;
         player.currentHealth -= enemyDamage;
         addToCombatLog(`${enemy.name} dealt ${enemyDamage} damage to ${player.name}!`);
-
         if (player.currentHealth <= 0) {playerDeath();}
       }
           displayStats();}
 		  
 function playerDeath() {
-  addToCombatLog(`${player.name} is defeated. Game over! But ${player.name} earned ${getCoin(player.level)} gold coins!`);
+  addToCombatLog(`${player.name} is defeated. Game over! But ${player.name} earned ${getCoin(player.level).toFixed(3)} gold coins!`);
   isLooping = false;
   clearInterval(loopId);
   player.coin += getCoin(player.level)
@@ -242,10 +241,7 @@ function getCoin(level) {
   // Generate a random factor between 1 and 2
   const randomFactor = 1 + Math.random();
 
-  // Calculate Coin based on the formula
-  const gain = Math.floor(1 + level ** 2 * randomFactor)*(1+(Upgrades.coinMult)/10);
-
-  return gain;
+  return Math.floor(1 + level ** 2 * randomFactor)*(1+(Upgrades.coinMult)/10);
 }
 
 function upgrade(handle) {
@@ -315,7 +311,7 @@ function getframeRate(n) {
 	  const b3 = document.getElementById("UP3");
 	  const b4 = document.getElementById("UP4");
 	  const b5 = document.getElementById("UP5");
-      const c1 = calculateUpgradeCost(1);
+          const c1 = calculateUpgradeCost(1);
 	  const c2 = calculateUpgradeCost(2);
 	  const c3 = calculateUpgradeCost(3);
 	  const c4 = calculateUpgradeCost(4);
@@ -328,8 +324,6 @@ function getframeRate(n) {
 	  b4.innerHTML = `Upgrade ${4} <br> Level: ${Upgrades.statMul}<br> Cost: ${c4} coins <br> Description: Multiplies hp and attack by ${1+(Upgrades.statMul)/100}x`;
 	  b5.innerHTML = `Upgrade ${5} <br> Level: ${Upgrades.frameRate}<br> Cost: ${c5} coins <br> Description: Make things happen faster.`;
     }
-	
-	displayUpgrade();
 	
 	function saveGame () {
 	let gameData = {player: player, fakeStat: fakeStat, Upgrades : Upgrades};
