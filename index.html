@@ -234,7 +234,7 @@ function addToCombatLog(message) {
     function generateNewEnemy() {
 	let hpMod = Math.floor(defeatCount * 3)*((1.06**defeatCount))
 	let atkMod = Math.floor(defeatCount * 1)*(1.05**defeatCount)
-	if (defeatCount % 50 === 0) {hpMod = Math.pow(hpMod,1+defeatCount/250); atkMod = Math.pow(atkMod,1+defeatCount/250)}
+	if (defeatCount % 50 === 0) {hpMod = Math.pow(hpMod,1+defeatCount/500); atkMod = Math.pow(atkMod,1+defeatCount/500)}
 	let hp = Math.floor(hpMod*((Math.random() * 2)+1))
       enemy = {
         name: "Enemy",
@@ -250,14 +250,14 @@ function addToCombatLog(message) {
 	sliderValue = 100/parseInt(slider.value)
 	document.getElementById("output").innerHTML = `Action happens every ${(sliderValue* framerate * (0.994649571761**Upgrades.frameRate)/1000).toFixed(3)} seconds.`
       document.getElementById("output").innerHTML += "<br> " + player.name + " Level " + displayLevel + "<br>";
-      document.getElementById("output").innerHTML += "Health: " + format(Math.floor(player.currentHealth))+ "/" + format(Math.floor(player.maxHealth)) + "<br>";
-      document.getElementById("output").innerHTML += "Attack: " + format(Math.floor(player.attack)) + "<br>";
-	  document.getElementById("output").innerHTML += "Coins: " + format(Math.floor(player.coin)) + "<br>";
-	  document.getElementById("output").innerHTML += "Exp: " + format(Math.floor(player.exp)) + "/" + format(Math.floor(getExpReq(player.level))) + "<br><br>";
+      document.getElementById("output").innerHTML += "Health: " + format(player.currentHealth)+ "/" + format(player.maxHealth) + "<br>";
+      document.getElementById("output").innerHTML += "Attack: " + format(player.attack) + "<br>";
+	  document.getElementById("output").innerHTML += "Coins: " + format(player.coin) + "<br>";
+	  document.getElementById("output").innerHTML += "Exp: " + format(player.exp) + "/" + format(getExpReq(player.level)) + "<br><br>";
 
       document.getElementById("output").innerHTML += `${enemy.name} # ${defeatCount}<br>`;
-      document.getElementById("output").innerHTML += "Health: " + format(Math.floor(enemy.currentHealth))+ "/" + format(Math.floor(enemy.maxHealth)) + "<br>";
-      document.getElementById("output").innerHTML += "Attack: " + format(Math.floor(enemy.attack)) + "<br><br>";
+      document.getElementById("output").innerHTML += "Health: " + format(enemy.currentHealth)+ "/" + format(enemy.maxHealth) + "<br>";
+      document.getElementById("output").innerHTML += "Attack: " + format(enemy.attack) + "<br><br>";
     }
 
     function attack() {
