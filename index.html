@@ -110,7 +110,7 @@
 </html>
 
   <script>
-let framerate = 2000;
+let framerate = 1000;
 let player = {
       name: "Player",
       level: 1,
@@ -132,7 +132,7 @@ function loop() {
   if (isLooping) {
     loopId = setInterval(function iteration() {
       attack();
-    }, framerate * (0.977**Upgrades.frameRate)); // Set the interval to the specified framerate
+    }, framerate * (0.988**Upgrades.frameRate)); // Set the interval to the specified framerate
   } else {
     // Stop the loop
     clearInterval(loopId);
@@ -306,7 +306,7 @@ function getstatMul(n) {
 		}
 function getframeRate(n) {	
 		if (n===1) { return Upgrades.frameRate}
-		if (n===2) { return Math.floor((Upgrades.frameRate+50) * (1.0189 ** Upgrades.frameRate))}
+		if (n===2) { return Math.floor((Upgrades.frameRate+50) * (1.0188 ** Upgrades.frameRate))}
 		}
 
     function displayUpgrade() {
