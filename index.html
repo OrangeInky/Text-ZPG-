@@ -170,7 +170,7 @@ let baseStatsGain = [3,1]
 function format(x) {
     let power = Math.floor(Math.log10(x))
     let matissa = x / Math.pow(10, power)
-    if (power < 6) {
+    if (power < 3) {
         return x;
     } else {
         return matissa.toFixed(2) + "e" + power;
@@ -181,7 +181,7 @@ function loop() {
   if (isLooping) {
     loopId = setInterval(function iteration() {
       attack();
-    }, framerate * (0.988**Upgrades.frameRate*sliderValue)); // Set the interval to the specified framerate
+    }, framerate * (0.988693577776**Upgrades.frameRate*sliderValue)); // Set the interval to the specified framerate
   } else {
     // Stop the loop
     clearInterval(loopId);
@@ -242,7 +242,7 @@ function addToCombatLog(message) {
 
     function displayStats() {
 	sliderValue = 100/parseInt(slider.value)
-	document.getElementById("output").innerHTML = `Action happens every ${(sliderValue* framerate * (0.977**Upgrades.frameRate)/1000).toFixed(3)} seconds.`
+	document.getElementById("output").innerHTML = `Action happens every ${(sliderValue* framerate * (0.988693577776**Upgrades.frameRate)/1000).toFixed(3)} seconds.`
       document.getElementById("output").innerHTML += `<br>${player.name} (Level ${format(player.level)})<br>`;
       document.getElementById("output").innerHTML += `Health: ${Math.floor(format(player.currentHealth))}/${Math.floor(format(player.maxHealth))}<br>`;
       document.getElementById("output").innerHTML += `Attack: ${Math.floor(format(player.attack))}<br>`;
@@ -325,7 +325,7 @@ function upgrade(handle) {
         Upgrades.statMul++;
         break;
       case 5:
-	    Upgrades.frameRate++;
+	if(Upgrades.frameRate<301){Upgrades.frameRate++;} else{alert("Max level reached")}
 	break;
       case 6:
 	    Upgrades.expMult++;
