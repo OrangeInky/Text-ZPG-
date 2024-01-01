@@ -228,8 +228,9 @@ function addToCombatLog(message) {
 }
 
     function generateNewEnemy() {
-	let hpMod = Math.floor(defeatCount * 2 ** ((Math.random() * 1)+1))*((1.06**defeatCount))
-	let atkMod = Math.floor(defeatCount ** ((Math.random() * 1)+1))*(1.05**defeatCount)
+	let hpMod = Math.floor(defeatCount * 3)*((1.06**defeatCount))
+	let atkMod = Math.floor(defeatCount * 1)*(1.05**defeatCount)
+	if (defeatCount % 50 === 0) {hpMod = Math.pow(hpMod,1+floor(defeatCount/50)); hpMod = Math.pow(atkMod,1+floor(defeatCount/50))}
 	let hp = Math.floor(hpMod*((Math.random() * 2)+1))
       enemy = {
         name: "Enemy",
