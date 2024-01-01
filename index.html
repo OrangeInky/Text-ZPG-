@@ -235,6 +235,7 @@ function playerDeath() {
   player.attack = (2+Upgrades.baseStat) * (1+(Upgrades.statMul)/100);
   player.currentHealth = player.maxHealth;
   document.getElementById("restartButton").style.display = "inline";
+  displayStats()
 }
 
 function getCoin(level) {
