@@ -179,10 +179,10 @@ let autoFight = false;
 function format(x) {
     let power = Math.floor(Math.log10(x))
     let matissa = x / Math.pow(10, power)
-    if (power < 3) {
+    if (power < 5) {
         return x.toFixed(2);
     } else {
-        return matissa.toFixed(3) + "e" + power;
+        return matissa.toFixed(2) + "e" + power;
     }
 }	  
 
