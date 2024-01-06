@@ -103,34 +103,11 @@
     }
 	#percentage-slider {
       width: 100px;
-	  appearance: slider-vertical;
     }
 
     #percentage-display {
       margin-top: 20px;
     }
-	#checkbox-label {
-      margin-right: 10px;
-    }
-	#settings {
-	display: flex;
-	justify-content: flex-start;
-	}
-	#checkbox-label {
-  align-self: flex-start; /* Align the label to the left (start) of the flex container */
-  margin-top: 10px; /* Adjust margin as needed */
-}
-#checkbox-container {
-  display: flex;
-  align-items: center;
-}
-#checkbox-label {
-  margin-top: 10px; /* Adjust margin as needed */
-}
-
-#example-checkbox {
-  margin-top: 10px; /* Adjust margin as needed */
-}
 
   </style>
 </head>
@@ -142,9 +119,11 @@
     <div id="output"></div>
     <div id="combat-log"></div>
 <div id="settings">
-  <input type="range" id="percentage-slider" min="10" max="100" value="100" step="1" oninput="displayStats()">
+  <input type="range" id="percentage-slider" min="10" max="100" value="100" step="1" oninput="displayStats()"> Speed Slider <br> <br>
   <label for="example-checkbox" id="checkbox-label">Buy Max:</label>
   <input type="checkbox" id="example-checkbox" onchange="buyMaxMode()">
+  <label for="example-checkbox-2" id="checkbox-label-2">Auto-fight: </label>
+  <input type="checkbox" id="example-checkbox" onchange="autoFightMode()">
 </div>
 
   </div>
@@ -195,6 +174,7 @@ let expReq = 10;
 let randRange = 1;
 let baseStatsGain = [3,1]
 let buyMax = false;
+let autoFight = false;
 	  
 function format(x) {
     let power = Math.floor(Math.log10(x))
@@ -329,6 +309,9 @@ function playerDeath() {
   document.getElementById("restartButton").style.display = "inline";
   displayStats()
   defeatCount = 0;
+  if (autoFight === true) {
+  startGame();
+  }
 }
 
 function levelUp() {
@@ -360,7 +343,7 @@ function getExpReq(level) {return expReq*(level**1.5)}
 
 
 function buyMaxMode() {buyMax=true;}
-
+function autoFightMode() {autoFight=true;}
 
 function upgrade(handle) {
   let cost = calculateUpgradeCost(handle);
