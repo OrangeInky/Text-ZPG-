@@ -305,7 +305,7 @@ function addToCombatLog(message) {
 	let healAmt = ((Upgrades.lifeSteal*0.5)/100 * playerDamage);
 	  if (player.currentHealth < player.maxHealth) {
 	  if ((player.currentHealth +  healAmt)> player.maxHealth) {player.currentHealth = player.maxHealth;} else {	  player.currentHealth += healAmt;}
-		addToCombatLog(player.name + " steals " + format(healAmt) + "!") 
+		addToCombatLog(player.name + " steals " + format(healAmt) + " HP!") 
 	  } else {player.maxHealth += Math.sqrt(healAmt);  fakeStat.maxHealth  +=Math.sqrt(healAmt)}
 		  addToCombatLog(player.name + " gained "  + format(Math.sqrt(healAmt)) + " as max health due to health steal!")
 	  }
@@ -339,7 +339,7 @@ function levelUp() {
 		player.exp+=getExpGain();
 		fakeStat.maxHealth += (enemy.maxHealth*Upgrades.statSteal/500);
 		fakeStat.attack += (enemy.attack*Upgrades.statSteal/500);
-		addToCombatLog(player.name + " steals " + format(enemy.maxHealth*Upgrades.statSteal/500) + " max health and " + format(enemy.attack*Upgrades.statSteal/500 + " attack!"))
+		addToCombatLog(player.name + " steals " + format(enemy.maxHealth*Upgrades.statSteal/500) + " max health and " + format(enemy.attack*Upgrades.statSteal/500) + " attack!"))
 		while(player.exp>=getExpReq(player.level)) {player.exp -= getExpReq(player.level); player.level++; fakeStat.maxHealth += baseStatsGain[0]*((Upgrades.statGainOnLvUp)/2+1); fakeStat.attack += baseStatsGain[1]*((Upgrades.statGainOnLvUp)/2+1); levelUpCount++;}
 		if(levelUpCount>0){addToCombatLog(`${player.name} gained ${levelUpCount} levels!`);}
 		player.maxHealth = fakeStat.maxHealth * 1+(Upgrades.statMul)/100;
