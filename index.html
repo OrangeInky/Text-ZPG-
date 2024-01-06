@@ -102,7 +102,8 @@
       background-color: #cc0000; /* Darker red on hover */
     }
 	#percentage-slider {
-      width: 300px;
+      width: 100px;
+	  appearance: slider-vertical;
     }
 
     #percentage-display {
@@ -111,18 +112,41 @@
 	#checkbox-label {
       margin-right: 10px;
     }
+	#settings {
+	display: flex;
+	justify-content: flex-start;
+	}
+	#checkbox-label {
+  align-self: flex-start; /* Align the label to the left (start) of the flex container */
+  margin-top: 10px; /* Adjust margin as needed */
+}
+#checkbox-container {
+  display: flex;
+  align-items: center;
+}
+#checkbox-label {
+  margin-top: 10px; /* Adjust margin as needed */
+}
+
+#example-checkbox {
+  margin-top: 10px; /* Adjust margin as needed */
+}
 
   </style>
 </head>
-<body onload = "loadGame()">
+<body onload = "startUp()">
 
   <h1>Text RPG</h1>
 
   <div id="container">
     <div id="output"></div>
     <div id="combat-log"></div>
-	<div id="settings"> <input type="range" id="percentage-slider" min="10" max="100" value="100" step="1" oninput="displayStats()"> <br> Percentage of speed to use. <br>  <label for="example-checkbox" id="checkbox-label">Buy Max:</label>
-  <input type="checkbox" id="example-checkbox" onchange="buyMaxMode()"></div>
+<div id="settings">
+  <input type="range" id="percentage-slider" min="10" max="100" value="100" step="1" oninput="displayStats()">
+  <label for="example-checkbox" id="checkbox-label">Buy Max:</label>
+  <input type="checkbox" id="example-checkbox" onchange="buyMaxMode()">
+</div>
+
   </div>
   
   <button id="restartButton" onclick="startGame()">Start Game</button>
@@ -133,11 +157,12 @@
     <button class="button" id = "UP4" onclick="upgrade(4)">Upgrade 4</button>
 	<button class="button" id = "UP5" onclick="upgrade(5)">Upgrade 5</button>
 	<button class="button" id = "UP6" onclick="upgrade(6)">Upgrade 6</button>
+	<button class="button" id = "UP7" onclick="upgrade(7)">Upgrade 7</button>
+	<button class="button" id = "UP8" onclick="upgrade(8)">Upgrade 8</button>
   </div>
     <div class="reset-button-container">
     <button class="reset-button" onclick="resetGame()">Reset (Works weirdly rn, don't click)</button>
   </div>
-
 </body>
 </html>
 
@@ -164,7 +189,7 @@ let fakeStat = {
 let enemy = {};
 let loopId;
 let isLooping = false;
-let Upgrades = {coinMult: 0, baseStat: 0, statSteal: 0, statMul: 0, frameRate: 0, expMult: 0};
+let Upgrades = {coinMult: 0, baseStat: 0, statSteal: 0, statMul: 0, frameRate: 0, expMult: 0, statGainOnLvUp: 0, lifeSteal: 0,};
 let defeatCount = 0;
 let expReq = 10;
 let randRange = 1;
@@ -175,7 +200,7 @@ function format(x) {
     let power = Math.floor(Math.log10(x))
     let matissa = x / Math.pow(10, power)
     if (power < 3) {
-        return x.toFixed(3);
+        return x;
     } else {
         return matissa.toFixed(3) + "e" + power;
     }
@@ -234,7 +259,7 @@ function addToCombatLog(message) {
     function generateNewEnemy() {
 	let hpMod = Math.floor(defeatCount * 3)*((1.06**defeatCount))
 	let atkMod = Math.floor(defeatCount * 1)*(1.05**defeatCount)
-	if (defeatCount % 50 === 0) {hpMod = Math.pow(hpMod,1+defeatCount/500); atkMod = Math.pow(atkMod,1+defeatCount/500)}
+	if (defeatCount % 50 === 0) {hpMod = Math.pow(hpMod,1+defeatCount/250); atkMod = Math.pow(atkMod,1+defeatCount/250)}
 	let hp = Math.floor(hpMod*((Math.random() * 2)+1))
       enemy = {
         name: "Enemy",
@@ -250,34 +275,27 @@ function addToCombatLog(message) {
 	sliderValue = 100/parseInt(slider.value)
 	document.getElementById("output").innerHTML = `Action happens every ${(sliderValue* framerate * (0.994649571761**Upgrades.frameRate)/1000).toFixed(3)} seconds.`
       document.getElementById("output").innerHTML += "<br> " + player.name + " Level " + displayLevel + "<br>";
-      document.getElementById("output").innerHTML += "Health: " + format(player.currentHealth)+ "/" + format(player.maxHealth) + "<br>";
-      document.getElementById("output").innerHTML += "Attack: " + format(player.attack) + "<br>";
-	  document.getElementById("output").innerHTML += "Coins: " + format(player.coin) + "<br>";
-	  document.getElementById("output").innerHTML += "Exp: " + format(player.exp) + "/" + format(getExpReq(player.level)) + "<br><br>";
+      document.getElementById("output").innerHTML += "Health: " + format(Math.floor(player.currentHealth))+ "/" + format(Math.floor(player.maxHealth)) + "<br>";
+      document.getElementById("output").innerHTML += "Attack: " + format(Math.floor(player.attack)) + "<br>";
+	  document.getElementById("output").innerHTML += "Coins: " + format(Math.floor(player.coin)) + "<br>";
+	  document.getElementById("output").innerHTML += "Exp: " + format(Math.floor(player.exp)) + "/" + format(Math.floor(getExpReq(player.level))) + "<br><br>";
 
       document.getElementById("output").innerHTML += `${enemy.name} # ${defeatCount}<br>`;
-      document.getElementById("output").innerHTML += "Health: " + format(enemy.currentHealth)+ "/" + format(enemy.maxHealth) + "<br>";
-      document.getElementById("output").innerHTML += "Attack: " + format(enemy.attack) + "<br><br>";
+      document.getElementById("output").innerHTML += "Health: " + format(Math.floor(enemy.currentHealth))+ "/" + format(Math.floor(enemy.maxHealth)) + "<br>";
+      document.getElementById("output").innerHTML += "Attack: " + format(Math.floor(enemy.attack)) + "<br><br>";
     }
 
     function attack() {
       let playerDamage = Math.floor(Math.random() * (1+Math.floor(player.attack/2))) + Math.floor(Math.random() * player.attack)/2 + 1;
       enemy.currentHealth -= playerDamage;
       addToCombatLog(player.name + " dealt " + format(playerDamage) + " damage to " + enemy.name + "!");
+	  if (Upgrades.lifeSteal > 0) {
+	  if (player.currentHealth < player.maxHealth) {
+	  if ((player.currentHealth + (Upgrades.lifeSteal*0.5)/100 * playerDamage) > player.maxHealth) {player.currentHealth = player.maxHealth;} else {	  player.currentHealth += (Upgrades.lifeSteal*0.5)/100 * playerDamage;}
+	  } else {player.maxHealth += Math.sqrt((Upgrades.lifeSteal*0.5)/100 * playerDamage); 	  fakeStat.maxHealth  +=Math.sqrt((Upgrades.lifeSteal*0.5)/100 * playerDamage)}
+	  }
       if (enemy.currentHealth <= 0) {
-		let levelUpCount = 0;
-	    addToCombatLog(`${enemy.name} is defeated!`)
-		addToCombatLog(player.name + " gained " + format(getExpGain()) + " exps!");
-		defeatCount++;
-		player.exp+=getExpGain();
-		fakeStat.maxHealth += (enemy.maxHealth*Upgrades.statSteal/500);
-		fakeStat.attack += (enemy.attack*Upgrades.statSteal/500);
-		while(player.exp>=getExpReq(player.level)) {player.exp -= getExpReq(player.level); player.level++; fakeStat.maxHealth += baseStatsGain[0]; fakeStat.attack += baseStatsGain[1]; levelUpCount++;}
-		if(levelUpCount>0){addToCombatLog(`${player.name} gained ${levelUpCount} levels!`);}
-		player.maxHealth = fakeStat.maxHealth * 1+(Upgrades.statMul)/100;
-		player.attack = fakeStat.attack * 1+(Upgrades.statMul)/100;
-        player.currentHealth = player.maxHealth;
-	    generateNewEnemy();;
+	  levelUp();
       } else {
         let enemyDamage = Math.floor(Math.random() * (1+Math.floor(enemy.attack/2))) + Math.floor(Math.random() * enemy.attack)/2 + 1;
         player.currentHealth -= enemyDamage;
@@ -287,6 +305,7 @@ function addToCombatLog(message) {
           displayStats();}
 		  
 function playerDeath() {
+  player.currentHealth = 0;
   addToCombatLog(player.name + " is defeated. Game over! But " + player.name + " earned " + format(getCoin(player.level)) + " gold coins!");
   isLooping = false;
   loop();
@@ -296,6 +315,21 @@ function playerDeath() {
   displayStats()
   defeatCount = 0;
 }
+
+function levelUp() {
+		let levelUpCount = 0;
+	    addToCombatLog(`${enemy.name} is defeated!`)
+		addToCombatLog(player.name + " gained " + format(getExpGain()) + " exps!");
+		defeatCount++;
+		player.exp+=getExpGain();
+		fakeStat.maxHealth += (enemy.maxHealth*Upgrades.statSteal/500);
+		fakeStat.attack += (enemy.attack*Upgrades.statSteal/500);
+		while(player.exp>=getExpReq(player.level)) {player.exp -= getExpReq(player.level); player.level++; fakeStat.maxHealth += baseStatsGain[0]*((Upgrades.statGainOnLvUp)/2+1); fakeStat.attack += baseStatsGain[1]*((Upgrades.statGainOnLvUp)/2+1); levelUpCount++;}
+		if(levelUpCount>0){addToCombatLog(`${player.name} gained ${levelUpCount} levels!`);}
+		player.maxHealth = fakeStat.maxHealth * 1+(Upgrades.statMul)/100;
+		player.attack = fakeStat.attack * 1+(Upgrades.statMul)/100;
+        player.currentHealth = player.maxHealth;
+	    generateNewEnemy();}
 
 function getCoin(level) {
   // Generate a random factor between 1 and 2
@@ -335,6 +369,13 @@ function upgrade(handle) {
 	break;
       case 6:
 	    Upgrades.expMult++;
+		break;
+	  case 7:
+		Upgrades.statGainOnLvUp++;
+		break;
+	  case 8:
+		Upgrades.lifeSteal++;
+		break;
       default:
         console.error('Invalid upgrade handle');
         break;
@@ -368,6 +409,13 @@ function upgrade(handle) {
 	break;
       case 6:
 	    Upgrades.expMult++;
+		break;
+	  case 7:
+		Upgrades.statGainOnLvUp++;
+		break;
+	  case 8:
+		Upgrades.lifeSteal++;
+		break;
       default:
         console.error('Invalid upgrade handle');
         break;
@@ -378,7 +426,7 @@ function upgrade(handle) {
 	displayStats();
 }
 
-function calculateUpgradeCost(handle) {switch(handle) {case 1: return getcoinMult(2); case 2: return getbaseStat(2); case 3: return getstatsSteal(2); case 4: return getstatMul(2); case 5: return getframeRate(2); case 6: return getExpMult(2);}}
+function calculateUpgradeCost(handle) {switch(handle) {case 1: return getcoinMult(2); case 2: return getbaseStat(2); case 3: return getstatsSteal(2); case 4: return getstatMul(2); case 5: return getframeRate(2); case 6: return getexpMult(2); case 7: return getstatGainOnLvUp(2); case 8: return getlifeSteal(2);}}
 
 function getcoinMult(n) {	
 		if (n===1) { return Upgrades.coinMult}
@@ -386,7 +434,7 @@ function getcoinMult(n) {
 		}
 function getbaseStat(n) {	
 		if (n===1) { return Upgrades.baseStat}
-		if (n===2) { return Math.floor((Upgrades.baseStat+5) * (Math.max(1,(Upgrades.baseStat)/1000) ** Upgrades.baseStat))}
+		if (n===2) { return Math.floor((Upgrades.baseStat+5) * (Math.max(1,(Upgrades.baseStat-1000)/1000) ** Upgrades.baseStat))}
 		}
 function getstatsSteal(n) {	
 		if (n===1) { return Upgrades.statSteal}
@@ -400,9 +448,17 @@ function getframeRate(n) {
 		if (n===1) { return Upgrades.frameRate}
 		if (n===2) { return Math.floor((Upgrades.frameRate+50) * (1.0188 ** Upgrades.frameRate))}
 		}
-function getExpMult(n) {
+function getexpMult(n) {
 		if (n===1) { return Upgrades.expMult}
 		if (n===2) { return Math.floor((Upgrades.expMult+1) * (1.0426 ** Upgrades.expMult))}
+		}
+function getstatGainOnLvUp(n) {
+		if (n===1) { return Upgrades.statGainOnLvUp}
+		if (n===2) { return Math.floor((Upgrades.statGainOnLvUp+120) * (1.0426 ** Upgrades.statGainOnLvUp))}
+		}
+function getlifeSteal(n) {
+		if (n===1) { return Upgrades.lifeSteal}
+		if (n===2) { return Math.floor((Upgrades.lifeSteal+100) * (1.0526 ** Upgrades.lifeSteal))}
 		}
 
     function displayUpgrade() {
@@ -412,20 +468,26 @@ function getExpMult(n) {
 	  const b4 = document.getElementById("UP4");
 	  const b5 = document.getElementById("UP5");
 	  const b6 = document.getElementById("UP6");
+	  const b7 = document.getElementById("UP7");
+	  const b8 = document.getElementById("UP8");
       const c1 = calculateUpgradeCost(1);
 	  const c2 = calculateUpgradeCost(2);
 	  const c3 = calculateUpgradeCost(3);
 	  const c4 = calculateUpgradeCost(4);
 	  const c5 = calculateUpgradeCost(5);
-	  const c6 = calculateUpgradeCost(6)
+	  const c6 = calculateUpgradeCost(6);
+	  const c7 = calculateUpgradeCost(7);
+	  const c8 = calculateUpgradeCost(8);
 
       // Update button text with cost and level
-      b1.innerHTML = `Upgrade ${1} <br> Level: ${Upgrades.coinMult}<br> Cost: ${c1} coins <br> Description: Multiplies coinGain by ${(Upgrades.coinMult)/5+1}`;
-	  b2.innerHTML = `Upgrade ${2} <br> Level: ${Upgrades.baseStat}<br> Cost: ${c2} coins <br> Description: add ${Upgrades.baseStat*1.5} base HP and ${Upgrades.baseStat*0.5} base attack <br> Hint: Triggers after player death, not immedieatly after purchase.`;
-	  b3.innerHTML = `Upgrade ${3} <br> Level: ${Upgrades.statSteal}<br> Cost: ${c3} coins <br> Description: steals ${Upgrades.statSteal/5}% of defeated enemy's stat`;
-	  b4.innerHTML = `Upgrade ${4} <br> Level: ${Upgrades.statMul}<br> Cost: ${c4} coins <br> Description: Multiplies hp and attack by ${1+(Upgrades.statMul)/100}x`;
-	  b5.innerHTML = `Upgrade ${5} <br> Level: ${Upgrades.frameRate}<br> Cost: ${c5} coins <br> Description: Make things happen faster.`;
-	  b6.innerHTML = `Upgrade ${6} <br> Level: ${Upgrades.expMult}<br> Cost: ${c6} coins <br> Description: Multiplies expGain by ${(Upgrades.expMult)/5+1}`;
+      b1.innerHTML = "Upgrade 1 <br> Level: " + format(Upgrades.coinMult) + "<br> Cost: " + format(c1) +" coins <br> Description: Multiplies coinGain by " + format(((Upgrades.coinMult)/5+1));
+	  b2.innerHTML = "Upgrade 2 <br> Level: " + format(Upgrades.baseStat) + "<br> Cost: "+ format(c2) + " coins <br> Description: add " + format(Upgrades.baseStat*1.5) + " base HP and " + format(Upgrades.baseStat*0.5) + " base attack <br> Hint: Triggers after player death, not immedieatly after purchase.";
+	  b3.innerHTML = "Upgrade 3 <br> Level: "+ format(Upgrades.statSteal) + "<br> Cost: " +format(c3) + " coins <br> Description: steals " + format(Upgrades.statSteal/5) + "% of defeated enemy's stat";
+	  b4.innerHTML = "Upgrade 4 <br> Level: " + format(Upgrades.statMul) + "<br> Cost: " + format(c4) + " coins <br> Description: Multiplies hp and attack by " + format(1+(Upgrades.statMul)/100) + "x";
+	  b5.innerHTML = "Upgrade 5 <br> Level: " + Upgrades.frameRate + "<br> Cost: " + format(c5) + " coins <br> Description: Make things happen faster.";
+	  b6.innerHTML = "Upgrade 6 <br> Level: " + format(Upgrades.expMult) + "<br> Cost: " + format(c6) + " coins <br> Description: Multiplies expGain by " + format((Upgrades.expMult)/5+1);
+	  b7.innerHTML = "Upgrade 7 <br> Level: " + format(Upgrades.statGainOnLvUp) + "<br> Cost: " + format(c7) +" coins <br> Description: Multiply stats gained on level up by " + format((Upgrades.statGainOnLvUp)/2+1);
+	  b8.innerHTML = "Upgrade 8 <br> Level: "+ format(Upgrades.lifeSteal) + "<br> Cost: " +format(c8) + " coins <br> Description: steals " + format(Upgrades.lifeSteal*0.5) + "% of enemy's max HP, excessive HP get added to max health diminishingly.";
     }
 	
 	function saveGame () {
@@ -438,29 +500,49 @@ function getExpMult(n) {
 	function loadGame () {
 	let gameData = localStorage.getItem("savedGame")
 	gameData = JSON.parse(gameData);
+	if (gameData != null) {
 	player.coin = gameData.player.coin;
 	fakeStat = gameData.fakeStat;
 	Upgrades = gameData.Upgrades;
+	return ;
+	} else {
+	player = {
+      name: "Player",
+      level: 1,
+      maxHealth: 5,
+      currentHealth: 5,
+      attack: 2,
+      coin: 0,
+	  exp: 0,}
+	Upgrades = {coinMult: 0, baseStat: 0, statSteal: 0, statMul: 0, frameRate: 0, expMult: 0, statGainOnLvUp: 0, lifeSteal: 0,}
+	randRange = 1
+	baseStatsGain = [3,1]
+	}
 	if (typeof gameData.Upgrades.expMult === "undefined") {Upgrades.expMult = 0;}
+	if (typeof gameData.Upgrades.statGainOnLvUp === "undefined") {Upgrades.statGainOnLvUp = 0;}
+	if (typeof gameData.Upgrades.lifeSteal === "undefined") {Upgrades.lifeSteal = 0;}
 	if (typeof gameData.player.coin === "undefined") {player.coin = 0;}
 	displayUpgrade();
 }
 
-	function saveLoop() {setInterval(function () {saveGame()},10000)}
+	function saveLoop() {setInterval(function () {saveGame()},5000)}
 	saveLoop();
 	function resetGame() {
     var C = confirm("YOU ARE RESETING THE GAME, ARE YOU SURE YOU WANT TO DO THAT?")
     if (C == true) {
         localStorage.clear();
         loadGame()
-        location.reload();   
-		saveGame ()
-        location.reload();  
+        location.reload();
+		displayUpgrade();
+		displayStats();
     }
 }
-
-
-
+	function startUp() {
+	loadGame();
+	displayUpgrade();
+	displayStats();
+	}
+displayUpgrade()
   </script>
 
 </body>
