@@ -186,7 +186,7 @@ let fakeStat = {
       maxHealth: 5,
       attack: 2,
     };
-let enemy = {};
+let enemy = {name: "Dummy Doll", currentHealth: 1, maxHealth: 1, attack: 1};
 let loopId;
 let isLooping = false;
 let Upgrades = {coinMult: 0, baseStat: 0, statSteal: 0, statMul: 0, frameRate: 0, expMult: 0, statGainOnLvUp: 0, lifeSteal: 0,};
@@ -541,7 +541,6 @@ function getlifeSteal(n) {
 	loadGame();
 	displayUpgrade();
 	displayStats();
-        generateNewEnemy();
 	}
 displayUpgrade()
   </script>
