@@ -339,7 +339,7 @@ function levelUp() {
 		player.exp+=getExpGain();
 		fakeStat.maxHealth += (enemy.maxHealth*Upgrades.statSteal/500);
 		fakeStat.attack += (enemy.attack*Upgrades.statSteal/500);
-		addToCombatLog(player.name + " steals " + format(enemy.maxHealth*Upgrades.statSteal/500) + " max health and " + format(enemy.attack*Upgrades.statSteal/500) + " attack!"))
+		addToCombatLog(player.name + " steals " + format(enemy.maxHealth*Upgrades.statSteal/500) + " max health and " + format(enemy.attack*Upgrades.statSteal/500) + " attack!")
 		while(player.exp>=getExpReq(player.level)) {player.exp -= getExpReq(player.level); player.level++; fakeStat.maxHealth += baseStatsGain[0]*((Upgrades.statGainOnLvUp)/2+1); fakeStat.attack += baseStatsGain[1]*((Upgrades.statGainOnLvUp)/2+1); levelUpCount++;}
 		if(levelUpCount>0){addToCombatLog(`${player.name} gained ${levelUpCount} levels!`);}
 		player.maxHealth = fakeStat.maxHealth * 1+(Upgrades.statMul)/100;
