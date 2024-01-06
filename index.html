@@ -200,7 +200,7 @@ function format(x) {
     let power = Math.floor(Math.log10(x))
     let matissa = x / Math.pow(10, power)
     if (power < 3) {
-        return x;
+        return x.toFixed(2);
     } else {
         return matissa.toFixed(3) + "e" + power;
     }
@@ -311,7 +311,7 @@ function addToCombatLog(message) {
       } else {
         let enemyDamage = Math.floor(Math.random() * (1+Math.floor(enemy.attack/2))) + Math.floor(Math.random() * enemy.attack)/2 + 1;
         player.currentHealth -= enemyDamage;
-        addToCombatLog(enemy.name + " dealt " + format(enemyDamage) + " damage to " + player.name + "!`");
+        addToCombatLog(enemy.name + " dealt " + format(enemyDamage) + " damage to " + player.name + "!");
         if (player.currentHealth <= 0) {playerDeath();}
       }
           displayStats();}
