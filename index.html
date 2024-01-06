@@ -518,10 +518,10 @@ function getlifeSteal(n) {
 	randRange = 1
 	baseStatsGain = [3,1]
 	}
-	if (typeof gameData.Upgrades.expMult === "undefined") {Upgrades.expMult = 0;}
-	if (typeof gameData.Upgrades.statGainOnLvUp === "undefined") {Upgrades.statGainOnLvUp = 0;}
-	if (typeof gameData.Upgrades.lifeSteal === "undefined") {Upgrades.lifeSteal = 0;}
-	if (typeof gameData.player.coin === "undefined") {player.coin = 0;}
+	if (typeof gameData.Upgrades.expMult === "undefined" || typeof gameData.Upgrades.expMult === null) {Upgrades.expMult = 0;}
+	if (typeof gameData.Upgrades.statGainOnLvUp === "undefined" || typeof gameData.Upgrades.statGainOnLvUp === null) {Upgrades.statGainOnLvUp = 0;}
+	if (typeof gameData.Upgrades.lifeSteal === "undefined" || typeof gameData.Upgrades.lifeSteal === null) {Upgrades.lifeSteal = 0;}
+	if (typeof gameData.player.coin === "undefined" || typeof gameData.player.coin === null) {player.coin = 0;}
 	displayUpgrade();
 }
 
