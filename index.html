@@ -487,7 +487,7 @@ function getlifeSteal(n) {
 	  b5.innerHTML = "Upgrade 5 <br> Level: " + Upgrades.frameRate + "<br> Cost: " + format(c5) + " coins <br> Description: Make things happen faster.";
 	  b6.innerHTML = "Upgrade 6 <br> Level: " + format(Upgrades.expMult) + "<br> Cost: " + format(c6) + " coins <br> Description: Multiplies expGain by " + format((Upgrades.expMult)/5+1);
 	  b7.innerHTML = "Upgrade 7 <br> Level: " + format(Upgrades.statGainOnLvUp) + "<br> Cost: " + format(c7) +" coins <br> Description: Multiply stats gained on level up by " + format((Upgrades.statGainOnLvUp)/2+1);
-	  b8.innerHTML = "Upgrade 8 <br> Level: "+ format(Upgrades.lifeSteal) + "<br> Cost: " +format(c8) + " coins <br> Description: steals " + format(Upgrades.lifeSteal*0.5) + "% of enemy's max HP, excessive HP get added to max health diminishingly.";
+	  b8.innerHTML = "Upgrade 8 <br> Level: "+ format(Upgrades.lifeSteal) + "<br> Cost: " +format(c8) + " coins <br> Description: steals " + format(Upgrades.lifeSteal*0.5) + "% of your damage dealt, excessive HP get added to max health diminishingly.";
     }
 	
 	function saveGame () {
