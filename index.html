@@ -342,8 +342,8 @@ function getExpGain() {const randomFactor = 1 + Math.random()*randRange; return 
 function getExpReq(level) {return expReq*(level**1.5)}
 
 
-function buyMaxMode() {buyMax=true;}
-function autoFightMode() {autoFight=true;}
+function buyMaxMode() {if (buyMax === true) {buyMax=false;} else {buyMax=true}}
+function autoFightMode() {if (autoFight === true) {autoFight=false;} else {buyMax =true}}
 
 function upgrade(handle) {
   let cost = calculateUpgradeCost(handle);
