@@ -119,7 +119,7 @@
     <div id="output"></div>
     <div id="combat-log"></div>
 <div id="settings">
-  <input type="range" id="percentage-slider" min="10" max="100" value="100" step="1" oninput="displayStats()"> Speed Slider <br> <br>
+  <input type="range" id="percentage-slider" min="10" max="100" value="100" step="1" oninput="sliderFunc()"> Speed Slider <br> <br>
   <label for="example-checkbox" id="checkbox-label">Buy Max:</label>
   <input type="checkbox" id="example-checkbox" onchange="buyMaxMode()">
   <label for="example-checkbox-2" id="checkbox-label-2">Auto-fight: </label>
@@ -239,7 +239,7 @@ function addToCombatLog(message) {
     function generateNewEnemy() {
 	let hpMod = Math.floor(defeatCount * 3)*((1.06**defeatCount))
 	let atkMod = Math.floor(defeatCount * 1)*(1.05**defeatCount)
-	let bossID = 0
+	let bossID = 1
 	if (defeatCount % 50 === 0) {hpMod = Math.pow(hpMod,1+defeatCount/250); atkMod = Math.pow(atkMod,1+defeatCount/250); bossID+=1;}
 	let hp = Math.floor(hpMod*((Math.random() * 2)+1))
 	if (defeatCount % 50 === 0 && defeatCount > 1) {
@@ -540,6 +540,20 @@ function getlifeSteal(n) {
 	loadGame();
 	displayUpgrade();
 	displayStats();
+	}
+	
+	function sliderFunc() {
+	  isLooping = false;
+      loop();
+	if (player.currentHealth === 0) {
+	  isLooping = false;
+      loop();
+	} else {
+	  isLooping = true;
+      loop();
+	}
+		displayUpgrade();
+		displayStats();
 	}
 displayUpgrade()
   </script>
