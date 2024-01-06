@@ -287,10 +287,10 @@ function addToCombatLog(message) {
 	sliderValue = 100/parseInt(slider.value)
 	document.getElementById("output").innerHTML = `Action happens every ${(sliderValue* framerate * (0.994649571761**Upgrades.frameRate)/1000).toFixed(3)} seconds.`
       document.getElementById("output").innerHTML += "<br> " + player.name + " Level " + displayLevel + "<br>";
-      document.getElementById("output").innerHTML += "Health: " + format(Math.floor(player.currentHealth))+ "/" + format(Math.floor(player.maxHealth)) + "<br>";
-      document.getElementById("output").innerHTML += "Attack: " + format(Math.floor(player.attack)) + "<br>";
-	  document.getElementById("output").innerHTML += "Coins: " + format(Math.floor(player.coin)) + "<br>";
-	  document.getElementById("output").innerHTML += "Exp: " + format(Math.floor(player.exp)) + "/" + format(Math.floor(getExpReq(player.level))) + "<br><br>";
+      document.getElementById("output").innerHTML += "Health: " + format(player.currentHealth)+ "/" + format(player.maxHealth) + "<br>";
+      document.getElementById("output").innerHTML += "Attack: " + format(player.attack) + "<br>";
+	  document.getElementById("output").innerHTML += "Coins: " + format(player.coin) + "<br>";
+	  document.getElementById("output").innerHTML += "Exp: " + format(player.exp) + "/" + format(getExpReq(player.level)) + "<br><br>";
 
       document.getElementById("output").innerHTML += `${enemy.name} # ${enemy.id}<br>`;
       document.getElementById("output").innerHTML += "Health: " + format(Math.floor(enemy.currentHealth))+ "/" + format(Math.floor(enemy.maxHealth)) + "<br>";
