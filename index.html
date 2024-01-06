@@ -186,7 +186,7 @@ let fakeStat = {
       maxHealth: 5,
       attack: 2,
     };
-let enemy = {name: "Dummy Doll", currentHealth: 1, maxHealth: 1, attack: 1};
+let enemy = {name: "Dummy Doll", currentHealth: 1, maxHealth: 1, attack: 1, id: -1,};
 let loopId;
 let isLooping = false;
 let Upgrades = {coinMult: 0, baseStat: 0, statSteal: 0, statMul: 0, frameRate: 0, expMult: 0, statGainOnLvUp: 0, lifeSteal: 0,};
@@ -259,15 +259,26 @@ function addToCombatLog(message) {
     function generateNewEnemy() {
 	let hpMod = Math.floor(defeatCount * 3)*((1.06**defeatCount))
 	let atkMod = Math.floor(defeatCount * 1)*(1.05**defeatCount)
-	if (defeatCount % 50 === 0) {hpMod = Math.pow(hpMod,1+defeatCount/250); atkMod = Math.pow(atkMod,1+defeatCount/250)}
+	let bossID = 0
+	if (defeatCount % 50 === 0) {hpMod = Math.pow(hpMod,1+defeatCount/250); atkMod = Math.pow(atkMod,1+defeatCount/250); bossID+=1;}
 	let hp = Math.floor(hpMod*((Math.random() * 2)+1))
-      enemy = {
+	if (defeatCount % 50 === 0) {
+	enemy = {
+        name: "Boss",
+        maxHealth: 3+hp,
+        currentHealth: 3+hp,
+        attack: Math.floor((1 + atkMod)*((Math.random() * 2)+1)),
+	id: bossID,}
+	addToCombatLog(`${enemy.name} appears!`);} else {
+     	enemy = {
         name: "Enemy",
         maxHealth: 3+hp,
         currentHealth: 3+hp,
         attack: Math.floor((1 + atkMod)*((Math.random() * 2)+1)),
+	id: defeatCount,
       };
       addToCombatLog(`${enemy.name} appears!`);
+}
     }
 
     function displayStats() {
@@ -280,7 +291,7 @@ function addToCombatLog(message) {
 	  document.getElementById("output").innerHTML += "Coins: " + format(Math.floor(player.coin)) + "<br>";
 	  document.getElementById("output").innerHTML += "Exp: " + format(Math.floor(player.exp)) + "/" + format(Math.floor(getExpReq(player.level))) + "<br><br>";
 
-      document.getElementById("output").innerHTML += `${enemy.name} # ${defeatCount}<br>`;
+      document.getElementById("output").innerHTML += `${enemy.name} # ${enemy.id}<br>`;
       document.getElementById("output").innerHTML += "Health: " + format(Math.floor(enemy.currentHealth))+ "/" + format(Math.floor(enemy.maxHealth)) + "<br>";
       document.getElementById("output").innerHTML += "Attack: " + format(Math.floor(enemy.attack)) + "<br><br>";
     }
@@ -292,7 +303,7 @@ function addToCombatLog(message) {
 	  if (Upgrades.lifeSteal > 0) {
 	  if (player.currentHealth < player.maxHealth) {
 	  if ((player.currentHealth + (Upgrades.lifeSteal*0.5)/100 * playerDamage) > player.maxHealth) {player.currentHealth = player.maxHealth;} else {	  player.currentHealth += (Upgrades.lifeSteal*0.5)/100 * playerDamage;}
-	  } else {player.maxHealth += Math.sqrt((Upgrades.lifeSteal*0.5)/100 * playerDamage); 	  fakeStat.maxHealth  +=Math.sqrt((Upgrades.lifeSteal*0.5)/100 * playerDamage)}
+	  } else {player.maxHealth += Math.sqrt((Upgrades.lifeSteal*0.5)/100 * playerDamage);  fakeStat.maxHealth  +=Math.sqrt((Upgrades.lifeSteal*0.5)/100 * playerDamage)}
 	  }
       if (enemy.currentHealth <= 0) {
 	  levelUp();
