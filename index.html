@@ -84,8 +84,8 @@
     }
 	 .reset-button-container {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 0px;
+      right: 0px;
     }
 
     .reset-button {
@@ -123,7 +123,13 @@
   <label for="example-checkbox" id="checkbox-label">Buy Max:</label>
   <input type="checkbox" id="example-checkbox" onchange="buyMaxMode()">
   <label for="example-checkbox-2" id="checkbox-label-2">Auto-fight: </label>
-  <input type="checkbox" id="example-checkbox" onchange="autoFightMode()">
+  <input type="checkbox" id="example-checkbox" onchange="autoFightMode()"> <br>
+  <label for="example-checkbox-3.1" id="checkbox-label-3.1" checked="true">battleLog: </label>
+  <input type="checkbox" id="example-checkbox" onchange="changeMode(1)" checked="true">
+  <label for="example-checkbox-3.2" id="checkbox-label-3.2">EXP gain: </label>
+  <input type="checkbox" id="example-checkbox" onchange="changeMode(2)" checked="true"> <br>
+  <label for="example-checkbox-3.4" id="checkbox-label-3.4">Skills: </label>
+  <input type="checkbox" id="example-checkbox" onchange="changeMode(3)" checked="true"> 
 </div>
 
   </div>
@@ -138,6 +144,8 @@
 	<button class="button" id = "UP6" onclick="upgrade(6)">Upgrade 6</button>
 	<button class="button" id = "UP7" onclick="upgrade(7)">Upgrade 7</button>
 	<button class="button" id = "UP8" onclick="upgrade(8)">Upgrade 8</button>
+	<button class="button" id = "UP9" onclick="upgrade(9)">Upgrade 9</button>
+	<button class="button" id = "UP10" onclick="upgrade(10)">Upgrade 10</button>
   </div>
     <div class="reset-button-container">
     <button class="reset-button" onclick="resetGame()">Reset (Works weirdly rn, don't click)</button>
@@ -168,13 +176,15 @@ let fakeStat = {
 let enemy = {name: "Dummy Doll", currentHealth: 1, maxHealth: 1, attack: 1, id: -1,};
 let loopId;
 let isLooping = false;
-let Upgrades = {coinMult: 0, baseStat: 0, statSteal: 0, statMul: 0, frameRate: 0, expMult: 0, statGainOnLvUp: 0, lifeSteal: 0,};
+let Upgrades = {coinMult: 0, baseStat: 0, statSteal: 0, statMul: 0, frameRate: 0, expMult: 0, statGainOnLvUp: 0, lifeSteal: 0, critChance: 0, critMult: 0};
 let defeatCount = 0;
 let expReq = 10;
 let randRange = 1;
 let baseStatsGain = [3,1]
 let buyMax = false;
 let autoFight = false;
+let combatLogSettings = {battleLog: true, expGain: true, skills: true}
+
 	  
 function format(x) {
     let power = Math.floor(Math.log10(x))
@@ -200,7 +210,6 @@ function loop() {
 
 function startGame() {
   document.getElementById("output").innerHTML = "Welcome to the Text RPG!<br>";
-  document.getElementById("combat-log").innerHTML = "";
   document.getElementById("restartButton").style.display = "none";
   displayStats();
   isLooping = true;
@@ -249,7 +258,8 @@ function addToCombatLog(message) {
         currentHealth: 3+hp,
         attack: Math.floor((1 + atkMod)*((Math.random() * 2)+1)),
 	id: bossID,}
-	addToCombatLog(`${enemy.name} appears!`);} else {
+	if (combatLogSettings.battleLog === true) {	addToCombatLog(`${enemy.name} appears!`);}}
+	else {
      	enemy = {
         name: "Enemy",
         maxHealth: 3+hp,
@@ -257,7 +267,7 @@ function addToCombatLog(message) {
         attack: Math.floor((1 + atkMod)*((Math.random() * 2)+1)),
 	id: defeatCount,
       };
-      addToCombatLog(`${enemy.name} appears!`);
+	  if (combatLogSettings.battleLog === true) {addToCombatLog(`${enemy.name} appears!`);}
 }
 	    	displayStats();
     }
@@ -280,21 +290,21 @@ function addToCombatLog(message) {
     function attack() {
       let playerDamage = Math.floor(Math.random() * (1+Math.floor(player.attack/2))) + Math.floor(Math.random() * player.attack)/2 + 1;
       enemy.currentHealth -= playerDamage;
-      addToCombatLog(player.name + " dealt " + format(playerDamage) + " damage to " + enemy.name + "!");
+	  if (combatLogSettings.battleLog === true) {addToCombatLog(player.name + " dealt " + format(playerDamage) + " damage to " + enemy.name + "!");}
 	  if (Upgrades.lifeSteal > 0) {
 	let healAmt = ((Upgrades.lifeSteal*0.5)/100 * playerDamage);
 	  if (player.currentHealth < player.maxHealth) {
 	  if ((player.currentHealth +  healAmt)> player.maxHealth) {player.currentHealth = player.maxHealth;} else {	  player.currentHealth += healAmt;}
-		addToCombatLog(player.name + " steals " + format(healAmt) + " HP!") 
+	  if (combatLogSettings.skills === true) {addToCombatLog(player.name + " steals " + format(healAmt) + " HP!")}
 	  } else {player.maxHealth += Math.sqrt(healAmt);  fakeStat.maxHealth  +=Math.sqrt(healAmt)}
-		  addToCombatLog(player.name + " gained "  + format(Math.sqrt(healAmt)) + " as max health due to health steal!")
+	  if (combatLogSettings.skills === true) {addToCombatLog(player.name + " gained "  + format(Math.sqrt(healAmt)) + " as max health due to health steal!")}
 	  }
       if (enemy.currentHealth <= 0) {
 	  levelUp();
       } else {
         let enemyDamage = Math.floor(Math.random() * (1+Math.floor(enemy.attack/2))) + Math.floor(Math.random() * enemy.attack)/2 + 1;
         player.currentHealth -= enemyDamage;
-        addToCombatLog(enemy.name + " dealt " + format(enemyDamage) + " damage to " + player.name + "!");
+		if (combatLogSettings.battleLog === true) {addToCombatLog(enemy.name + " dealt " + format(enemyDamage) + " damage to " + player.name + "!");}
         if (player.currentHealth <= 0) {playerDeath();}
       }
           displayStats();}
@@ -316,15 +326,15 @@ function playerDeath() {
 
 function levelUp() {
 		let levelUpCount = 0;
-	   	addToCombatLog(`${enemy.name} is defeated!`)
-		addToCombatLog(player.name + " gained " + format(getExpGain()) + " exps!");
+		if (combatLogSettings.battleLog === true) {addToCombatLog(`${enemy.name} is defeated!`)}
+		if (combatLogSettings.expGain === true) {addToCombatLog(player.name + " gained " + format(getExpGain()) + " exps!");}
 		defeatCount++;
 		player.exp+=getExpGain();
 		fakeStat.maxHealth += (enemy.maxHealth*Upgrades.statSteal/500);
 		fakeStat.attack += (enemy.attack*Upgrades.statSteal/500);
-		addToCombatLog(player.name + " steals " + format(enemy.maxHealth*Upgrades.statSteal/500) + " max health and " + format(enemy.attack*Upgrades.statSteal/500) + " attack!")
+		if (combatLogSettings.skills === true) {addToCombatLog(player.name + " steals " + format(enemy.maxHealth*Upgrades.statSteal/500) + " max health and " + format(enemy.attack*Upgrades.statSteal/500) + " attack!")}
 		while(player.exp>=getExpReq(player.level)) {player.exp -= getExpReq(player.level); player.level++; fakeStat.maxHealth += baseStatsGain[0]*((Upgrades.statGainOnLvUp)/2+1); fakeStat.attack += baseStatsGain[1]*((Upgrades.statGainOnLvUp)/2+1); levelUpCount++;}
-		if(levelUpCount>0){addToCombatLog(`${player.name} gained ${levelUpCount} levels!`);}
+		if(levelUpCount>0 && combatLogSettings.expGain === true){addToCombatLog(`${player.name} gained ${levelUpCount} levels!`);}
 		player.maxHealth = fakeStat.maxHealth * 1+(Upgrades.statMul)/100;
 		player.attack = fakeStat.attack * 1+(Upgrades.statMul)/100;
         player.currentHealth = player.maxHealth;
@@ -344,6 +354,20 @@ function getExpReq(level) {return expReq*(level**1.5)}
 
 function buyMaxMode() {if (buyMax === true) {buyMax=false;} else {buyMax=true}}
 function autoFightMode() {if (autoFight === true) {autoFight=false;} else {autoFight =true}}
+function changeMode(n) {
+	switch (n) {
+	case 1:
+	if (combatLogSettings.battleLog === true) {combatLogSettings.battleLog = false;} else {combatLogSettings.battleLog =true}
+	break;
+	case 2:
+	if (combatLogSettings.expGain === true) {combatLogSettings.expGain = false;} else {combatLogSettings.expGain = true;}
+	break;
+	case 3:
+	if (combatLogSettings.skills === true) {combatLogSettings.skills = false;} else {combatLogSettings.skills = true;} 
+	break;
+	}
+
+}
 
 function upgrade(handle) {
   let cost = calculateUpgradeCost(handle);
@@ -513,12 +537,14 @@ function getlifeSteal(n) {
       attack: 2,
       coin: 0,
 	  exp: 0,}
-	Upgrades = {coinMult: 0, baseStat: 0, statSteal: 0, statMul: 0, frameRate: 0, expMult: 0, statGainOnLvUp: 0, lifeSteal: 0,}
+	Upgrades = {coinMult: 0, baseStat: 0, statSteal: 0, statMul: 0, frameRate: 0, expMult: 0, statGainOnLvUp: 0, lifeSteal: 0, critChance: 0, critMult: 0}
 	randRange = 1
 	baseStatsGain = [3,1]
 	}
 	if (typeof gameData.Upgrades.expMult === "undefined" || typeof gameData.Upgrades.expMult === null) {Upgrades.expMult = 0;}
 	if (typeof gameData.Upgrades.statGainOnLvUp === "undefined" || typeof gameData.Upgrades.statGainOnLvUp === null) {Upgrades.statGainOnLvUp = 0;}
+	if (typeof gameData.Upgrades.critChance === "undefined" || typeof gameData.Upgrades.critChance === null) {Upgrades.critChance = 0;}
+	if (typeof gameData.Upgrades.critMult === "undefined" || typeof gameData.Upgrades.critMult === null) {Upgrades.critMult = 0;}
 	if (typeof gameData.Upgrades.lifeSteal === "undefined" || typeof gameData.Upgrades.lifeSteal === null) {Upgrades.lifeSteal = 0;}
 	if (typeof gameData.player.coin === "undefined" || typeof gameData.player.coin === null) {player.coin = 0;}
 	displayUpgrade();
