@@ -1,0 +1,172 @@
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background-color: #f5f5f5;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1 {
+      font-family: 'Cursive', sans-serif;
+      color: #333;
+    }
+
+    #container {
+      display: flex;
+      justify-content: space-between;
+      width: 80%;
+      margin-top: 20px;
+    }
+
+#output, #combat-log, #Settings {
+      flex: 1;
+      text-align: left;
+      overflow-y: scroll;
+      height: 300px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #fff;
+      margin-right: 10px;
+      font-family: 'Georgia', serif;
+      font-size: 16px;
+      line-height: 1.5;
+	  width: 200px
+}
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4caf50;
+      color: #fff;
+      border-color: black;
+      border-radius: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+	
+	.grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .upgradeButton {
+      padding: 15px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+	 .upgradeButton:hover {
+      background-color: #2980b9;
+    }
+	 .reset-button-container {
+      position: fixed;
+      bottom: 0px;
+      right: 0px;
+    }
+
+    .reset-button {
+      background-color: #ff0000; /* Bright red color */
+      color: #ffffff; /* White text color */
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+	  height: 25%; /* Initial width set to a quarter of the button's full size */
+	  overflow: hidden; /* Hide the overflowing content */
+	  transition: height 0.3s ease; /* Smooth transition effect */
+    }
+	
+	.reset-button span {
+	display: none;
+	}
+
+    .reset-button:hover {
+      background-color: #cc0000; /* Darker red on hover */
+	  height: 100%; /* Expand to full size on hover */
+    }
+	
+	.reset-button:hover span {
+	display: inline;
+	}
+	
+	
+	#percentage-slider {
+      width: 100px;
+    }
+
+    #percentage-display {
+      margin-top: 20px;
+    }
+	/* Tooltip container */
+	.tooltip {
+		position: relative;
+		display: inline-block;
+	}
+
+	/* Tooltip text */
+	.tooltip::after {
+		content: attr(title);
+		position: absolute;
+		background-color: rgba(0, 0, 0, 0.8);
+		color: #fff;
+		padding: 4px 8px;
+		border-radius: 4px;
+		font-size: 14px;
+		white-space: nowrap;
+		visibility: hidden;
+		opacity: 0;
+		transition: opacity 0.3s;
+	}
+
+	/* Show tooltip on hover */
+	.tooltip:hover::after {
+		visibility: visible;
+		opacity: 1;
+	}
+	.button-container {
+	  position: absolute;
+	  top: 0;
+	  left: 0;
+	  width: 100%;
+	  display: flex;
+	  justify-content: flex-start;
+	  gap: 5px; /* Adjust the gap between buttons as needed */
+	}
+
+#Tabs {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  gap: 5px; /* Adjust the gap between buttons as needed */
+}
+
+#Tabs button {
+    background-color: #0096FF;
+	width: 1%; /* Initial width set to a quarter of the button's full size */
+	overflow: hidden; /* Hide the overflowing content */
+	transition: width 0.3s ease; /* Smooth transition effect */
+}
+
+#Tabs button:hover {
+  background-color: #0080ff;
+  width: 10%;
+}
